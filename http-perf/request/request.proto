@@ -1,0 +1,15 @@
+syntax = "proto3";
+package request;
+
+option go_package = "http-perf/request";
+
+message HeaderContent {
+  repeated string values = 1;
+}
+
+message Request {
+  string method = 1;
+  string url = 2;
+  map<string, HeaderContent> header = 3;
+  bytes body = 4;
+}
