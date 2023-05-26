@@ -19,3 +19,6 @@
 
 # Go workspace file
 go.work
+http-perf/wasm/examples/post/json/rs-time2json/target
+http-perf/wasm/examples/post/json/rs-time2json/__pycache__
+*.swp
