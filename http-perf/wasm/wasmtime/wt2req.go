@@ -8,6 +8,7 @@ import (
 	"github.com/bytecodealliance/wasmtime-go/v9"
 
 	perf "github.com/takanoriyanagitani/go-http-perf/http-perf"
+	wasm "github.com/takanoriyanagitani/go-http-perf/http-perf/wasm"
 	util "github.com/takanoriyanagitani/go-http-perf/util"
 )
 
@@ -17,6 +18,32 @@ var ErrInvalidExtern error = errors.New("invalid extern")
 var ErrInvalidMemory error = errors.New("invalid memory")
 
 type wasm2module func(wasm []byte) (*wasmtime.Module, error)
+
+type Engine2builderFactory func(
+	time2req string,
+	address string,
+	wasm []byte,
+) (perf.UnixtimeMicros2RequestBuilder, error)
+
+var engine2builderDefault Engine2builderFactory = func(
+	time2req string,
+	address string,
+	wasm []byte,
+) (perf.UnixtimeMicros2RequestBuilder, error) {
+	var engine *wasmtime.Engine = wasmtime.NewEngine()
+	return engine2builder{
+		engine,
+		time2req,
+		address,
+		wasm,
+	}, nil
+}
+
+var Engine2builderDefault Engine2builderFactory = engine2builderDefault
+
+type Wasm2builder wasm.Wasm2builder
+
+var Wasm2builderDefault Wasm2builder = util.CurryErrIII(Engine2builderDefault)("time2req")("addr")
 
 type engine2builder struct {
 	engine   *wasmtime.Engine
@@ -38,6 +65,11 @@ func (w engine2builder) build() (module2builder, error) {
 		module,
 	}, em
 }
+
+func (w engine2builder) Build() (perf.UnixtimeMicros2Request, error) {
+	return engine2microsBuilderDefault(w)
+}
+func (w engine2builder) AsIf() perf.UnixtimeMicros2RequestBuilder { return w }
 
 type module2builder struct {
 	time2req string
@@ -153,6 +185,27 @@ func (b wasmtime2requestBuilder) build() (wasmtime2request, error) {
 		buffer,
 	}, e
 }
+
+type engine2microsBuilder func(engine2builder) (perf.UnixtimeMicros2Request, error)
+
+var engine2microsBuilderDefault engine2microsBuilder = util.ComposeErr(
+	func(e2b engine2builder) (module2builder, error) { return e2b.build() },
+	module2microsBuilderDefault,
+)
+
+type module2microsBuilder func(module2builder) (perf.UnixtimeMicros2Request, error)
+
+var module2microsBuilderDefault module2microsBuilder = util.ComposeErr(
+	func(m module2builder) (wasmtime2requestBuilder, error) { return m.build() },
+	unixtime2microsBuilderDefault,
+)
+
+type unixtime2microsBuilder func(wasmtime2requestBuilder) (perf.UnixtimeMicros2Request, error)
+
+var unixtime2microsBuilderDefault unixtime2microsBuilder = util.ComposeErr(
+	func(b wasmtime2requestBuilder) (wasmtime2request, error) { return b.build() },
+	func(w wasmtime2request) (perf.UnixtimeMicros2Request, error) { return w.toMicros2req(), nil },
+)
 
 type wasmtime2request struct {
 	micros2req *wasmtime.Func

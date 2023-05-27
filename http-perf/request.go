@@ -36,6 +36,10 @@ func Bytes2RequestNewPB(buf *preq.Request) Bytes2Request {
 type Time2Request func(time.Time) (*preq.Request, error)
 type Time2RequestRaw func(time.Time) (raw []byte, e error)
 
+type UnixtimeMicros2RequestBuilder interface {
+	Build() (UnixtimeMicros2Request, error)
+}
+
 type UnixtimeMicros2Request func(micros int64) (raw []byte, e error)
 
 func (u UnixtimeMicros2Request) ToTime2RequestRaw() Time2RequestRaw {
