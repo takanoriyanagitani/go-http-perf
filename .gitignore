@@ -22,3 +22,5 @@ go.work
 http-perf/wasm/examples/post/json/rs-time2json/target
 http-perf/wasm/examples/post/json/rs-time2json/__pycache__
 *.swp
+cmd/server/request-generator/__pycache__
+cmd/server/request-generator/request-generator
