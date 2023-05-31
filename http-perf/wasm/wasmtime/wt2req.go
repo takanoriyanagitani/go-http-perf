@@ -25,25 +25,63 @@ type Engine2builderFactory func(
 	wasm []byte,
 ) (perf.UnixtimeMicros2RequestBuilder, error)
 
-var engine2builderDefault Engine2builderFactory = func(
-	time2req string,
-	address string,
-	wasm []byte,
-) (perf.UnixtimeMicros2RequestBuilder, error) {
-	var engine *wasmtime.Engine = wasmtime.NewEngine()
-	return engine2builder{
-		engine,
-		time2req,
-		address,
-		wasm,
-	}, nil
+type EngineConfig struct{ cfg *wasmtime.Config }
+
+func EngineConfigNew() *EngineConfig { return &EngineConfig{cfg: wasmtime.NewConfig()} }
+
+func (c *EngineConfig) SetCraneliftOptLevel(level wasmtime.OptLevel) *EngineConfig {
+	c.cfg.SetCraneliftOptLevel(level)
+	return c
 }
 
-var Engine2builderDefault Engine2builderFactory = engine2builderDefault
+func (c *EngineConfig) ToBuilder() EngineBuilder {
+	return func() *wasmtime.Engine {
+		return wasmtime.NewEngineWithConfig(c.cfg)
+	}
+}
+
+type EngineBuilder func() *wasmtime.Engine
+
+var DefaultEngineBuilder EngineBuilder = wasmtime.NewEngine
+
+var EngineBuilderSpeed EngineBuilder = EngineConfigNew().
+	SetCraneliftOptLevel(wasmtime.OptLevelSpeed).
+	ToBuilder()
+
+func (b EngineBuilder) ToFactory() Engine2builderFactory {
+	return func(
+		time2req string,
+		address string,
+		wasm []byte,
+	) (perf.UnixtimeMicros2RequestBuilder, error) {
+		var engine *wasmtime.Engine = b()
+		return engine2builder{
+			engine,
+			time2req,
+			address,
+			wasm,
+		}, nil
+	}
+}
+
+var Engine2builderDefault Engine2builderFactory = DefaultEngineBuilder.ToFactory()
+var Engine2builderSpeed Engine2builderFactory = EngineBuilderSpeed.ToFactory()
 
 type Wasm2builder wasm.Wasm2builder
 
-var Wasm2builderDefault Wasm2builder = util.CurryErrIII(Engine2builderDefault)("time2req")("addr")
+const (
+	DefaultFuncName string = "time2req"
+	DefaultAddrName string = "addr"
+)
+
+type Factory2Builder func(Engine2builderFactory) Wasm2builder
+
+var Factory2BuilderDefault Factory2Builder = func(factory Engine2builderFactory) Wasm2builder {
+	return util.CurryErrIII(factory)(DefaultFuncName)(DefaultAddrName)
+}
+
+var Wasm2builderDefault Wasm2builder = Factory2BuilderDefault(Engine2builderDefault)
+var Wasm2builderSpeed Wasm2builder = Factory2BuilderDefault(Engine2builderSpeed)
 
 type engine2builder struct {
 	engine   *wasmtime.Engine

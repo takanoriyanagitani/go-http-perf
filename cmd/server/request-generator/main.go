@@ -21,13 +21,11 @@ func must[T any](t T, e error) T {
 }
 
 var wasmLocation string = os.Getenv("ENV_WASM_PATH")
-var wasm2reqgen wasm.Wasm2builder = wasm.Wasm2builder(wtperf.Wasm2builderDefault)
+var wasm2reqgen wasm.Wasm2builder = wasm.Wasm2builder(wtperf.Wasm2builderSpeed)
 var rgbuild hperf.UnixtimeMicros2RequestBuilder = must(wasm2reqgen.FromPath(wasmLocation))
 var reqgen hperf.UnixtimeMicros2Request = must(rgbuild.Build())
 var rawTime2req hperf.Time2RequestRaw = reqgen.ToTime2RequestRaw()
 var rawTime2reqLock sync.Mutex
-
-func hf2handler(hf http.HandlerFunc) http.Handler { return hf }
 
 func time2req(t time.Time) (serialized []byte, e error) {
 	rawTime2reqLock.Lock()
