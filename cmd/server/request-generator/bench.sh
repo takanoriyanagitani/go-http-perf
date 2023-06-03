@@ -19,10 +19,20 @@ multi(){
 		&
 }
 
-#multi
-single
+launch(){
+	#multi
+	single
+	sleep 5
+}
 
-sleep 5
+url=localhost:53080/now2req
 
-bombardier \
-	localhost:53080/now2req
+curl \
+	--head \
+	--fail \
+	--silent \
+	--output /dev/null \
+	${url} \
+	|| launch
+
+time bombardier ${url}
