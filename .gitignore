@@ -26,3 +26,4 @@ cmd/server/request-generator/__pycache__
 cmd/server/request-generator/request-generator
 http-perf/wasm/examples/math/trigonometry/rs-trigonometry-std/target
 http-perf/wasm/examples/math/trigonometry/rs-trigonometry-fast/target
+http-perf/wasm/examples/math/trigonometry/rs-sin-fast/target
