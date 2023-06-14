@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Any
 from dataclasses import dataclass
 
 import math
 import functools
+import json
 
 import wasmtime.loader
 
@@ -11,6 +12,8 @@ import rs_sin_fast
 
 I4TO_F5: float = 1.0 / 32768.0
 
+PI: float = 4.0 * math.atan(1.0)
+
 def f32_sin_fast_u64(x: int)->float:
 	return rs_sin_fast.f32_sin_fast_u64(x)
 
@@ -18,7 +21,8 @@ def f32_sin_slow_u64(x: int)->float:
 	i4: int = x & 0xffff
 	f4: float = float(i4)
 	xf: float = f4 * I4TO_F5
-	return math.sin(xf)
+	xp: float = xf * PI
+	return math.sin(xp)
 
 @dataclass
 class CompareSine:
@@ -47,7 +51,11 @@ mapd: List[CompareSine] = list(map(input2compare, inputs))
 
 for compare in mapd:
 	diff: float = compare.fast - compare.slow
-	print(dict(
+	neo: dict[str, Any] = dict(
 		input=compare.input,
 		diff=diff,
-	))
+		fast=compare.fast,
+		slow=compare.slow,
+	)
+	js: str = json.dumps(neo)
+	print(js)
