@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Callable
 from dataclasses import dataclass
 
 import math
@@ -13,6 +13,11 @@ import rs_sin_fast
 I4TO_F5: float = 1.0 / 32768.0
 
 PI: float = 4.0 * math.atan(1.0)
+
+def f32_sum_range(lbi: int, ube: int, i2f: Callable[[int], float])->float:
+	integers = range(lbi, ube)
+	mapd = map(i2f, integers)
+	return sum(mapd)
 
 def f32_sin_fast_u64(x: int)->float:
 	return rs_sin_fast.f32_sin_fast_u64(x)
@@ -59,3 +64,6 @@ for compare in mapd:
 	)
 	js: str = json.dumps(neo)
 	print(js)
+
+print(f32_sum_range(-32768, 32768, f32_sin_fast_u64))
+print(f32_sum_range(-32768, 32768, f32_sin_slow_u64))
