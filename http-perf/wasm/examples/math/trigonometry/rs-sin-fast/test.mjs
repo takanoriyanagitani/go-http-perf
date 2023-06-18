@@ -40,6 +40,12 @@ const module2instance = function (module) {
   return new WebAssembly.Instance(module, {});
 };
 
+const compare_dummy_sin = (i) => {
+  const o = i / 32768.0;
+  const x = o * Math.PI;
+  return Math.sin(x);
+};
+
 const main = async function () {
   const wasm = await filename2wasm(wasmName);
   const {
@@ -49,10 +55,16 @@ const main = async function () {
   const { exports } = instance;
   const { f32_sin_fast_u64 } = exports;
   let sum = 0.0;
-  for (let i = 0n; i < 1677721600n; i++) { // 19 Mops / s @ Core i7-9750H
+  for (let i = 0n; i < 167772160n; i++) { // 19 Mops / s @ Core i7-9750H
     const f = f32_sin_fast_u64(i);
     sum += f;
   }
+  /*
+  for (let i = 0; i < 167772160; i++) { //
+    const f = compare_dummy_sin(i);
+    sum += f;
+  }
+  */
   console.info(sum);
   return;
 };
