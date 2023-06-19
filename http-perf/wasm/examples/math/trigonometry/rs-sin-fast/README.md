@@ -2,6 +2,9 @@
 
 ## Benchmark
 
+- "fast" version: up to 32 M calls / s @ Apple M2
+- "slow" version: up to 59 M calls / s @ Apple M2
+
 - Intel Core i7-8700 3.2 GHz
 - node v18.14.2 / linux
 
