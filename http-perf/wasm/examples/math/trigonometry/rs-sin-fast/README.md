@@ -1,12 +1,48 @@
 # Sine-like function
 
-## Benchmark
+## Benchmarks
+
+### browser / macOS Ventura(Apple M2)
+
+| type                | calls | elapsed | calls / s |
+|:-------------------:|:-----:|:-------:|:---------:|
+| firefox / sine-like |  65K  |   4 ms  |  16 M     |
+| firefox / Math.sin  |  65K  |   1 ms  |  66 M     |
+| firefox / sine-like | 131K  |   3 ms  |  44 M     |
+| firefox / Math.sin  | 131K  |   3 ms  |  44 M     |
+| firefox / sine-like |   1M  |  17 ms  |  62 M     |
+| firefox / Math.sin  |   1M  |  14 ms  |  75 M     |
+| firefox / sine-like |  16M  | 120 ms  | 140 M     |
+| firefox / Math.sin  |  16M  | 137 ms  | 122 M     |
+| firefox / sine-like | 167M  | 1.04 s  | 161 M     |
+| firefox / Math.sin  | 167M  | 1.05 s  | 160 M     |
+| safari  / sine-like |  65K  |  14 ms  |   5 M     |
+| safari  / Math.sin  |  65K  |   3 ms  |  22 M     |
+| safari  / sine-like | 131K  |  19 ms  |   7 M     |
+| safari  / Math.sin  | 131K  |   5 ms  |  26 M     |
+| safari  / sine-like |   1M  |  76 ms  |  14 M     |
+| safari  / Math.sin  |   1M  |  17 ms  |  62 M     |
+| safari  / sine-like |  16M  | 731 ms  |  23 M     |
+| safari  / Math.sin  |  16M  | 102 ms  | 164 M     |
+| safari  / sine-like | 167M  | 7.92 s  |  21 M     |
+| safari  / Math.sin  | 167M  | 970 ms  | 173 M     |
+| chrome  / sine-like |  65K  |  17 ms  |   4 M     |
+| chrome  / Math.sin  |  65K  |   5 ms  |  13 M     |
+| chrome  / sine-like | 131K  |  11 ms  |  12 M     |
+| chrome  / Math.sin  | 131K  |   5 ms  |  26 M     |
+| chrome  / sine-like |   1M  |  60 ms  |  17 M     |
+| chrome  / Math.sin  |   1M  |  25 ms  |  42 M     |
+| chrome  / sine-like |  16M  | 515 ms  |  32 M     |
+| chrome  / Math.sin  |  16M  | 128 ms  | 131 M     |
+| chrome  / sine-like | 167M  | 5.02 s  |  33 M     |
+| chrome  / Math.sin  | 167M  | 2.62 s  |  64 M     |
+
+### node v18.16.0 / macOS Ventura(Apple M2)
 
 - "fast" version: up to 32 M calls / s @ Apple M2
 - "slow" version: up to 59 M calls / s @ Apple M2
 
-- Intel Core i7-8700 3.2 GHz
-- node v18.14.2 / linux
+### node v18.14.2 / linux(Core i7-8700 3.2 GHz)
 
 |      type | calls | user | sys  | cpu% | total | calls/s | ratio |
 | --------: | :---: | :--: | :--: | :--: | :---: | :-----: | :---: |

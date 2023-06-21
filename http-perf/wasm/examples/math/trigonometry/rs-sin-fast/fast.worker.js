@@ -43,7 +43,7 @@
         const diff = end - start;
         self.postMessage({
           ms: diff,
-		  sum,
+          sum,
         });
       });
   };
