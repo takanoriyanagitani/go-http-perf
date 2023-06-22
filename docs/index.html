@@ -1,1 +1,31 @@
-../http-perf/wasm/examples/math/trigonometry/rs-sin-fast/index.html
+<!DOCTYPE html>
+<html>
+<head>
+	<title>benchmark "fast" sin</title>
+	<link
+		href="index.css?_=20230620093855"
+		rel="stylesheet"
+	/>
+</head>
+<body>
+	<div id="sel-container">
+		<select id="calls">
+			<option value="65536">65536</option>
+			<option value="131072">131072</option>
+			<option value="1048576">1048576</option>
+			<option value="16777216">16777216</option>
+			<option value="167772160">167772160</option>
+			<option value="1677721600">1677721600</option>
+		</select>
+	</div>
+	<div id="fast-container">
+		<button id="fast">'Fast'</button>
+		<span id="fast-ms">(No result)</span>
+	</div>
+	<div id="slow-container">
+		<button id="slow">'Slow'</button>
+		<span id="slow-ms">(No result)</span>
+	</div>
+	<script type="module" src="index.mjs"></script>
+</body>
+</html>

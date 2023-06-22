@@ -1,1 +1,11 @@
-../http-perf/wasm/examples/math/trigonometry/rs-sin-fast/index.css
+body {
+  background-color: #111;
+  color: #999;
+}
+
+button, select {
+  width: 8rem;
+  padding: .5rem;
+  margin: .5rem;
+  text-align: center;
+}
