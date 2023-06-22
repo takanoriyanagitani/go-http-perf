@@ -1,0 +1,1 @@
+../http-perf/wasm/examples/math/trigonometry/rs-sin-fast/fast.worker.js
