@@ -35,7 +35,7 @@
     response2buf2wasm,
   );
 
-  const wasmUrl = "/rs_sin_fast.wasm";
+  const wasmUrl = "/go-http-perf/rs_sin_fast.wasm";
 
   self.onmessage = (evt) => {
     const { data } = evt;
