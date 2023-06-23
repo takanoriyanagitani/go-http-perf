@@ -1,23 +1,38 @@
 (() => {
+  const compose = (f, g) => {
+    return (t) => {
+      const u = f(t);
+      const v = g(u);
+      return v;
+    };
+  };
+
+  const composeAsync = (f, g) => {
+    return async (t) => {
+      return Promise.resolve(t)
+        .then(f)
+        .then(g);
+    };
+  };
+
   const url2response = async (url) => {
     const response = await fetch(url);
     return response;
   };
 
+  const response2buf = async (res) => res.arrayBuffer();
+  const buf2wasm = (buf) => WebAssembly.instantiate(buf, {});
+  const response2buf2wasm = composeAsync(
+    response2buf,
+    buf2wasm,
+  );
+
   const response2wasm = async (response) =>
     WebAssembly.instantiateStreaming(response, {});
 
-  const composeAsync = (f, g) => {
-    return async (t) => {
-      const u = await f(t);
-      const v = await g(u);
-      return v;
-    };
-  };
-
   const url2wasm = composeAsync(
     url2response,
-    response2wasm,
+    response2buf2wasm,
   );
 
   const wasmUrl = "/rs_sin_fast.wasm";
