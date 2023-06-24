@@ -2,6 +2,31 @@
 
 ## Benchmarks
 
+### CPU / firefox
+
+| type                 | calls | elapsed  | calls / s |
+|:--------------------:|:-----:|:--------:|:---------:|
+| M2       / sine-like |  65K  |   4 ms   |  16 M     |
+| M2       / Math.sin  |  65K  |   1 ms   |  66 M     |
+| i7-9750H / sine-like |  65K  |   1 ms   |  66 M     |
+| i7-9750H / Math.sin  |  65K  |   2 ms   |  33 M     |
+| M2       / sine-like | 131K  |   3 ms   |  44 M     |
+| M2       / Math.sin  | 131K  |   3 ms   |  44 M     |
+| i7-9750H / sine-like | 131K  |   2 ms   |  66 M     |
+| i7-9750H / Math.sin  | 131K  |   3 ms   |  44 M     |
+| M2       / sine-like |   1M  |  17 ms   |  62 M     |
+| M2       / Math.sin  |   1M  |  14 ms   |  75 M     |
+| i7-9750H / sine-like |   1M  |  10 ms   | 105 M     |
+| i7-9750H / Math.sin  |   1M  |  20 ms   |  52 M     |
+| M2       / sine-like |  16M  | 120 ms   | 140 M     |
+| M2       / Math.sin  |  16M  | 137 ms   | 122 M     |
+| i7-9750H / sine-like |  16M  | 165 ms   | 102 M     |
+| i7-9750H / Math.sin  |  16M  | 275 ms   |  61 M     |
+| M2       / sine-like | 167M  | 1.04 s   | 161 M     |
+| M2       / Math.sin  | 167M  | 1.05 s   | 160 M     |
+| i7-9750H / sine-like | 167M  | 1.75 s   |  96 M     |
+| i7-9750H / Math.sin  | 167M  | 5.30 s   |  32 M     |
+
 ### browser / macOS Ventura(Apple M2)
 
 | type                | calls | elapsed | calls / s |
