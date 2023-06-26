@@ -4,6 +4,10 @@
 
 ### CPU / firefox
 
+- i7-9750H: Intel Core i7 9750H(laptop, linux)
+- M2:       Apple M2(mac mini, macOS)
+- A13:      Apple A13(iPhone 11 Pro Max, iOS)
+
 | type                 | calls | elapsed  | calls / s |
 |:--------------------:|:-----:|:--------:|:---------:|
 | M2       / sine-like |  65K  |   4 ms   |  16 M     |
