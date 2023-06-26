@@ -8,6 +8,8 @@
 |:--------------------:|:-----:|:--------:|:---------:|
 | M2       / sine-like |  65K  |   4 ms   |  16 M     |
 | M2       / Math.sin  |  65K  |   1 ms   |  66 M     |
+| A13      / sine-like |  65K  |  15 ms   |   4 M     |
+| A13      / Math.sin  |  65K  |   8 ms   |   8 M     |
 | i7-9750H / sine-like |  65K  |   1 ms   |  66 M     |
 | i7-9750H / Math.sin  |  65K  |   2 ms   |  33 M     |
 | M2       / sine-like | 131K  |   3 ms   |  44 M     |
@@ -20,6 +22,8 @@
 | i7-9750H / Math.sin  |   1M  |  20 ms   |  52 M     |
 | M2       / sine-like |  16M  | 120 ms   | 140 M     |
 | M2       / Math.sin  |  16M  | 137 ms   | 122 M     |
+| A13      / sine-like |  16M  | 1.04 s   |  16 M     |
+| A13      / Math.sin  |  16M  | 155 ms   | 108 M     |
 | i7-9750H / sine-like |  16M  | 165 ms   | 102 M     |
 | i7-9750H / Math.sin  |  16M  | 275 ms   |  61 M     |
 | M2       / sine-like | 167M  | 1.04 s   | 161 M     |
