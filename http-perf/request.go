@@ -62,16 +62,16 @@ func (g Time2Request) Generate() (*preq.Request, error) {
 	return g(now)
 }
 
-func RequestToStd(r *preq.Request) (*http.Request, error) {
-	var method string = r.Method
-	var url string = r.Url
-	var content []byte = r.Body
+func RequestToStd(request *preq.Request) (*http.Request, error) {
+	var method string = request.Method
+	var url string = request.Url
+	var content []byte = request.Body
 	var body io.Reader = bytes.NewReader(content)
 	req, e := http.NewRequest(method, url, body)
 	return util.Select(
 		func() (*http.Request, error) { return nil, e },
 		func() (*http.Request, error) {
-			headerToStd(req.Header, r.Header)
+			headerToStd(req.Header, request.Header)
 			return req, nil
 		},
 		nil == e,
