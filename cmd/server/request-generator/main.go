@@ -83,20 +83,20 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	var handler http.HandlerFunc = func(w http.ResponseWriter, _ *http.Request) {
+	var handler http.HandlerFunc = func(writer http.ResponseWriter, _ *http.Request) {
 		var now time.Time = time.Now()
 		generated, e := time2req(now)
 		util.Select(
 			func() {
-				w.WriteHeader(500)
-				_, ew := w.Write([]byte("Unable to create a request bytes."))
+				writer.WriteHeader(500)
+				_, ew := writer.Write([]byte("Unable to create a request bytes."))
 				mustNil(ew)
 				log.Printf("Unable to create a request bytes: %v\n", e)
 			},
 			func() {
-				var hdr http.Header = w.Header()
+				var hdr http.Header = writer.Header()
 				hdr.Set("Content-Type", "application/octet-stream")
-				_, ew := w.Write(generated)
+				_, ew := writer.Write(generated)
 				mustNil(ew)
 			},
 			nil == e,
