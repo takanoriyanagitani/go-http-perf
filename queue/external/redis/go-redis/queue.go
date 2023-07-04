@@ -19,6 +19,13 @@ func PushKeyNew[T any](cli *gr.Client) queue.PushKey[string, T] {
 	}
 }
 
+func PopKeyNew(cli *gr.Client) queue.PopKey[string] {
+	return func(ctx context.Context, key string) (serialized []byte, e error) {
+		var cmd *gr.StringCmd = cli.RPop(ctx, key)
+		return cmd.Bytes()
+	}
+}
+
 func QueueLengthKeyNew(cli *gr.Client) queue.QueueLengthKey[string] {
 	return func(ctx context.Context, key string) (length int64, e error) {
 		var cmd *gr.IntCmd = cli.LLen(ctx, key)
