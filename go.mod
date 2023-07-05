@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/bytecodealliance/wasmtime-go/v9 v9.0.0
 	github.com/redis/go-redis/v9 v9.0.5
+	golang.org/x/net v0.11.0
 	google.golang.org/protobuf v1.30.0
 )
 
