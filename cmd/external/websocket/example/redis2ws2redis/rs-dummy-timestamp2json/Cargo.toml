@@ -1,0 +1,22 @@
+[package]
+name = "rs-dummy-timestamp2json"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release-wasm]
+inherits = "release"
+lto = true
+strip = true
+opt-level = 's'
+codegen-units = 16
+
+[dependencies.serde-json-core]
+version = "0.5.0"
+
+[dependencies.serde]
+version = "1.0.166"
+default-features = false
+features = ["derive", "alloc"]
