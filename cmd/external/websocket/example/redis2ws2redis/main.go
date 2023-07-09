@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -65,12 +66,15 @@ func onConnect(con *websocket.Conn) {
 		var ctx context.Context = context.Background()
 		for {
 			e := app.SendRecv(ctx)
-			if nil != e {
+			switch e {
+			case nil:
+				time.Sleep(1 * time.Second)
+			case io.EOF:
+				return
+			default:
 				log.Printf("Err: %v\n", e)
 				time.Sleep(10 * time.Second)
-				continue
 			}
-			time.Sleep(1 * time.Second)
 		}
 	}()
 }
