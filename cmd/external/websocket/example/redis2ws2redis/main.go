@@ -34,7 +34,15 @@ var ps queue.PopSeed[[]byte] = psk.ToPopSeed(pushKey)
 var pss ew.PopSerializedSeed = ew.PopSerializedSeed(ps)
 
 var prk queue.PushRequestKey[string] = rq.PushRequestKeyNew(client)
-var pr ew.PushRequest = ew.PushRequest(prk.ToPushRequest(popKey))
+var qlk queue.QueueLengthKey[string] = rq.QueueLengthKeyNew(client)
+var ql queue.QueueLength = qlk.ToQueueLength(popKey)
+var pl queue.PushLimit = ql.ToPushLimit(func(length int64) (tooMany bool) {
+	return 256 < length
+})
+var qpr queue.PushRequest = prk.
+	ToPushRequest(popKey).
+	WithLimit(pl)
+var pr ew.PushRequest = ew.PushRequest(qpr)
 
 var dummyRequestSender queue.RequestSender = func(_ctx context.Context, _q *http.Request) error {
 	log.Printf("trying to send...\n")
@@ -71,6 +79,9 @@ func onConnect(con *websocket.Conn) {
 				time.Sleep(1 * time.Second)
 			case io.EOF:
 				return
+			case queue.ErrTooManyRequests:
+				log.Printf("%v\n", e)
+				time.Sleep(60 * time.Second)
 			default:
 				log.Printf("Err: %v\n", e)
 				time.Sleep(10 * time.Second)
