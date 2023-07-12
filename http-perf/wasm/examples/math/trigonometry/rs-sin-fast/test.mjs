@@ -55,16 +55,17 @@ const main = async function () {
   const { exports } = instance;
   const { f32_sin_fast_u64 } = exports;
   let sum = 0.0;
-  for (let i = 0n; i < 16777216n; i++) { // 32 M calls / s @ Apple M2
-    const f = f32_sin_fast_u64(i);
-    sum += f;
+  if (false) {
+    for (let i = 0n; i < 16777216n; i++) { // 32 M calls / s @ Apple M2
+      const f = f32_sin_fast_u64(i);
+      sum += f;
+    }
+  } else {
+    for (let i = 0; i < 16777216; i++) { // 59 M calls / s @ Apple M2
+      const f = compare_dummy_sin(i);
+      sum += f;
+    }
   }
-  /*
-  for (let i = 0; i < 16777216; i++) { // 59 M calls / s @ Apple M2
-    const f = compare_dummy_sin(i);
-    sum += f;
-  }
-  */
   console.info(sum);
   return;
 };
