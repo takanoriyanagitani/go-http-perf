@@ -78,12 +78,12 @@
 
 ### node v18 / 16M calls
 
-|        type         | calls/s |
-| :-----------------: | :-----: |
-| sine-like, Apple M2 |  32 M   |
-| sine-like, i7-13700 |  35 M   |
-| Math.sin, Apple M2  |  59 M   |
-| Math.sin, i7-13700  |  100 M  |
+|        type         | calls/s |    TDP     |  TDP / core  | calls/s/W |
+| :-----------------: | :-----: | :--------: | :----------: | :-------: |
+| sine-like, Apple M2 |  32 M   |    22 W    |    2.8 W     |   11 M    |
+| sine-like, i7-13700 |  35 M   | 65 ~ 219 W | 4.1 ~ 13.7 W |  3 ~ 9 M  |
+| Math.sin, Apple M2  |  59 M   |    22 W    |    2.8 W     |   21 M    |
+| Math.sin, i7-13700  |  100 M  | 65 ~ 219 W | 4.1 ~ 13.7 W | 7 ~ 24 M  |
 
 ### node v18.16.0 / macOS Ventura(Apple M2)
 
