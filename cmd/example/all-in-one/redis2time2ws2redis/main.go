@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -36,7 +37,6 @@ var pstime queue.PopSeedKey[string, []byte] = rq.PopSeedKeyNew(client)
 var praw queue.PopSeed[[]byte] = pstime.ToPopSeed(seedKey)
 var pss ews.PopSerializedSeed = ews.PopSerializedSeed(praw)
 
-// var prk queue.PushLimitKey[string] = rq.Pu
 var qlk queue.QueueLengthKey[string] = rq.QueueLengthKeyNew(client)
 var rql queue.QueueLength = qlk.ToQueueLength(reqKey)
 var rpl queue.PushLimit = rql.ToPushLimit(func(qlen int64) (tooMany bool) {
@@ -55,14 +55,14 @@ var fileh http.Handler = http.FileServer(pubfs)
 
 func onWs(conn *websocket.Conn) {
 	var send ews.Send = wss.SendNew(conn)
-	var ss ews.SeedSend = pss.ToSeedSender(send)
+	var ssend ews.SeedSend = pss.ToSeedSender(send)
 
 	var buf []byte
 	var recv ews.Recv = wss.RecvNew(conn, buf)
 	var pr ews.PushReceived = wpr.ToPushReceived(recv)
 
 	var app ews.App = ews.App{
-		SeedSend:     ss,
+		SeedSend:     ssend,
 		PushReceived: pr,
 	}
 
@@ -70,18 +70,18 @@ func onWs(conn *websocket.Conn) {
 	for {
 		ctx, cancel := context.WithTimeout(ctx, timeout)
 		defer cancel()
-		e := app.SendRecv(ctx)
-		switch e {
-		case io.EOF:
+		err := app.SendRecv(ctx)
+		switch {
+		case errors.Is(err, io.EOF):
 			return
-		case nil:
+		case nil == err:
 			time.Sleep(wait)
 			continue
-		case queue.ErrTooManyRequests:
+		case errors.Is(err, queue.ErrTooManyRequests):
 			time.Sleep(sleep)
 			continue
 		default:
-			log.Fatalf("Unexpected error: %v\n", e)
+			log.Fatalf("Unexpected error: %v\n", err)
 		}
 	}
 }
