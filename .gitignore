@@ -30,3 +30,4 @@ http-perf/wasm/examples/math/trigonometry/rs-sin-fast/target
 http-perf/wasm/examples/math/trigonometry/rs-sin-fast/__pycache__
 cmd/buffer/dummy/dummy
 cmd/external/websocket/example/redis2ws2redis/rs-dummy-timestamp2json/target
+cmd/example/all-in-one/time2wasm2json/target

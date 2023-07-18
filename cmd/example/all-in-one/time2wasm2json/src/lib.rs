@@ -68,7 +68,7 @@ struct Detail {
 
 impl Detail {
     fn new(seed_unixtime_us: i64) -> Self {
-        let timestamp_ms: u16 = (seed_unixtime_us & 0xffff) as u16;
+        let timestamp_ms: u16 = (seed_unixtime_us & 0x03ff) as u16;
         let ms: f32 = timestamp_ms.into();
         Self {
             timestamp_ms,
