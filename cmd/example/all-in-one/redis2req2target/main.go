@@ -31,7 +31,7 @@ var client *gr.Client = gr.NewClient(&gr.Options{
 var pkr queue.PopKey[string] = rq.PopKeyNew(client)
 var qpr queue.Pop = pkr.ToPop(reqKey)
 
-const target string = "http://localhost:7168"
+const target string = "http://localhost:7168/"
 
 var reqbase queue.RequestInfo = queue.
 	RequestInfoPost.
