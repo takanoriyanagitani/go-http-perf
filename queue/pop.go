@@ -69,3 +69,28 @@ func (m RequestMetaSource) ToRequestSource(pop Pop) RequestSource {
 		)()
 	}
 }
+
+func (s RequestSource) WithEditor(editor RequestEditor) RequestSource {
+	return func(ctx context.Context) (edited *http.Request, e error) {
+		original, e := s(ctx)
+		return util.Select(
+			func() (*http.Request, error) { return nil, e },
+			func() (*http.Request, error) {
+				edited = editor(original)
+				return edited, nil
+			},
+			nil == e,
+		)()
+	}
+}
+
+func (s RequestSource) ToSender(rs RequestSender) Sender {
+	return func(ctx context.Context) error {
+		req, e := s(ctx)
+		return util.Select(
+			func() error { return nil },
+			func() error { return rs(ctx, req) },
+			nil == e,
+		)()
+	}
+}
