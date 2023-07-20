@@ -19,7 +19,7 @@ import (
 const reqKey string = "test-request"
 
 const timeout time.Duration = 4 * time.Second
-const wait time.Duration = 6 * time.Millisecond
+const wait time.Duration = 10 * time.Millisecond
 const sleep time.Duration = 1 * time.Second
 
 var client *gr.Client = gr.NewClient(&gr.Options{

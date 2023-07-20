@@ -1,4 +1,4 @@
-(() => {
+(async () => {
   const _sent = document.getElementById("sent");
   const _recv = document.getElementById("recv");
 
@@ -30,22 +30,34 @@
     };
   };
 
-  // TODO
-  const us2json = (micros) => {
-    return JSON.stringify({
-      dummy: "data",
-      sample: 42,
-      c: 2.99792458,
-      micros: micros + "",
-      complex: {
-        header: ["c1", "c2"],
-        data: [
-          [2, 0.599],
-          [3, 3.776],
-          [5, 0.634],
-        ],
+  const wasmRes = await fetch("/pub/time2wasm2json.wasm");
+  const wasmBuf = await wasmRes.arrayBuffer();
+  const { module, instance } = await WebAssembly.instantiate(
+    wasmBuf,
+    {
+      env: {
+        sin_f64: Math.sin,
+        sin_f32: Math.sin,
       },
-    });
+    },
+  );
+  const { exports } = instance;
+  const {
+    memory,
+    init_internal,
+    output2ptr,
+    unixtime2json,
+  } = exports;
+  init_internal();
+  const baseAddr = output2ptr();
+  const { buffer } = memory;
+  const decoder = new TextDecoder("utf-8");
+
+  const us2json = (micros) => {
+    const sz = unixtime2json(BigInt(Date.now() * 1000));
+    const json = buffer.slice(baseAddr, baseAddr + sz);
+    const decoded = decoder.decode(json);
+    return decoded;
   };
 
   const data2us = (data) => {
