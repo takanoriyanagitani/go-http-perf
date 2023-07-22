@@ -76,7 +76,7 @@ func mustNil(e error) {
 }
 
 func main() {
-	var s *http.Server = &http.Server{
+	var server *http.Server = &http.Server{
 		Addr:           ":53080",
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -85,13 +85,13 @@ func main() {
 
 	var handler http.HandlerFunc = func(writer http.ResponseWriter, _ *http.Request) {
 		var now time.Time = time.Now()
-		generated, e := time2req(now)
+		generated, err := time2req(now)
 		util.Select(
 			func() {
-				writer.WriteHeader(500)
+				writer.WriteHeader(http.StatusInternalServerError)
 				_, ew := writer.Write([]byte("Unable to create a request bytes."))
 				mustNil(ew)
-				log.Printf("Unable to create a request bytes: %v\n", e)
+				log.Printf("Unable to create a request bytes: %v\n", err)
 			},
 			func() {
 				var hdr http.Header = writer.Header()
@@ -99,11 +99,11 @@ func main() {
 				_, ew := writer.Write(generated)
 				mustNil(ew)
 			},
-			nil == e,
+			nil == err,
 		)()
 	}
 
 	http.HandleFunc("/now2req", handler)
 
-	log.Fatal(s.ListenAndServe())
+	log.Fatal(server.ListenAndServe())
 }
