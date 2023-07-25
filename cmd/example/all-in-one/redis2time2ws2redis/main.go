@@ -66,11 +66,13 @@ func onWs(conn *websocket.Conn) {
 		PushReceived: pr,
 	}
 
-	var ctx context.Context = context.Background()
+	var rootCtx context.Context = context.Background()
 	for {
-		ctx, cancel := context.WithTimeout(ctx, timeout)
-		defer cancel()
-		err := app.SendRecv(ctx)
+		ctx, cancel := context.WithTimeout(rootCtx, timeout)
+		err := func() error {
+			defer cancel()
+			return app.SendRecv(ctx)
+		}()
 		switch {
 		case errors.Is(err, io.EOF):
 			return

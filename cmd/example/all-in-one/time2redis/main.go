@@ -39,11 +39,13 @@ type SeedSender func(context.Context) error
 func main() {
 	var ptimeBeDefault PushTime = PushRaw(praw).ToPushTime(Time2bytesBeDefault)
 	var senderBeDefault SeedSender = ptimeBeDefault.ToSeedSender(TimeSourceDefault)
-	var ctx context.Context = context.Background()
+	var rootCtx context.Context = context.Background()
 	for {
-		ctx, cancel := context.WithTimeout(ctx, timeout)
-		defer cancel()
-		e := senderBeDefault(ctx)
+		ctx, cancel := context.WithTimeout(rootCtx, timeout)
+		e := func() error {
+			defer cancel()
+			return senderBeDefault(ctx)
+		}()
 
 		switch e {
 		case queue.ErrTooMany:
@@ -56,11 +58,5 @@ func main() {
 			log.Fatalf("Unexpected error: %v\n", e)
 		}
 
-		select {
-		case <-time.After(wait):
-			continue
-		case <-ctx.Done():
-			return
-		}
 	}
 }
