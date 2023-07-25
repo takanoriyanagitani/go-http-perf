@@ -44,8 +44,14 @@ func builder2pool(b hperf.UnixtimeMicros2RequestBuilder) *u2rPool {
 	}
 }
 
-func (p *u2rPool) getRaw() any                    { return p.pool.Get() }
-func (p *u2rPool) get() hperf.Time2RequestRaw     { return p.getRaw().(hperf.Time2RequestRaw) }
+func (p *u2rPool) getRaw() any { return p.pool.Get() }
+func (p *u2rPool) get() hperf.Time2RequestRaw {
+	t2r, ok := p.getRaw().(hperf.Time2RequestRaw)
+	if !ok {
+		panic("Unexpected error")
+	}
+	return t2r
+}
 func (p *u2rPool) put(um2r hperf.Time2RequestRaw) { p.pool.Put(um2r) }
 func (p *u2rPool) time2request(t time.Time) (raw []byte, e error) {
 	var t2r hperf.Time2RequestRaw = p.get()
